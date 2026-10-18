@@ -143,7 +143,13 @@ const StyledLinks = styled.div`
     }
   }
 
-  .resume-button {
+  .nav-actions {
+    display: flex;
+    align-items: center;
+  }
+
+  .resume-button,
+  .blog-button {
     ${({ theme }) => theme.mixins.smallButton};
     margin-left: 15px;
     font-size: var(--fz-xs);
@@ -215,6 +221,12 @@ const Nav = ({ isHome }) => {
     </a>
   );
 
+  const BlogLink = (
+    <Link className="blog-button" href="/blog/">
+      Blog
+    </Link>
+  );
+
   return (
     <StyledHeader scrollDirection={scrollDirection} scrolledToTop={scrolledToTop}>
       <StyledNav>
@@ -231,7 +243,10 @@ const Nav = ({ isHome }) => {
                     </li>
                   ))}
               </ol>
-              <div>{ResumeLink}</div>
+              <div className="nav-actions">
+                {BlogLink}
+                {ResumeLink}
+              </div>
             </StyledLinks>
 
             <Menu />
@@ -271,8 +286,10 @@ const Nav = ({ isHome }) => {
                 {isMounted && (
                   <CSSTransition nodeRef={resumeRef} classNames={fadeDownClass} timeout={timeout}>
                     <div
+                      className="nav-actions"
                       ref={resumeRef}
                       style={{ transitionDelay: `${isHome ? navLinks.length * 100 : 0}ms` }}>
+                      {BlogLink}
                       {ResumeLink}
                     </div>
                   </CSSTransition>
