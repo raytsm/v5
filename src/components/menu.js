@@ -146,10 +146,18 @@ const StyledSidebar = styled.aside`
     }
   }
 
-  .resume-link {
+  .menu-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    margin: 10% auto 0;
+  }
+
+  .resume-link,
+  .blog-link {
     ${({ theme }) => theme.mixins.bigButton};
     padding: 18px 50px;
-    margin: 10% auto 0;
     width: max-content;
   }
 `;
@@ -266,9 +274,14 @@ const Menu = React.forwardRef(function Menu(_props, ref) {
               </ol>
             )}
 
-            <a href="/resume.pdf" className="resume-link">
-              Resume
-            </a>
+            <div className="menu-actions">
+              <Link href="/blog/" className="blog-link" onClick={() => setMenuOpen(false)}>
+                Blog
+              </Link>
+              <a href="/resume.pdf" className="resume-link">
+                Resume
+              </a>
+            </div>
           </nav>
         </StyledSidebar>
       </div>

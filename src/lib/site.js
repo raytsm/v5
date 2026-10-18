@@ -1,8 +1,7 @@
 module.exports = {
   title: 'Roshan Thapa',
   description:
-    'Brittany Chiang is a software engineer who specializes in building (and occasionally designing) exceptional digital experiences.',
-  siteUrl: 'https://brittanychiang.com',
-  image: '/og.png',
-  twitterUsername: '@bchiang7',
+    'Roshan Thapa is a computer engineer working on data infrastructure and machine learning systems.',
+  siteUrl: 'https://roshan-thapa.com.np',
+  image: '/icon.png',
 };

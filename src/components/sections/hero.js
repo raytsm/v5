@@ -67,7 +67,7 @@ const Hero = () => {
     <>
       <p>
         I’m a computer engineer specializing in Data Engineering and ML systems. Currently, I’m
-        focused on building data infrastructure and piplines at{' '}
+        focused on building data infrastructure and pipelines at{' '}
         <a href="https://pesha.work/" target="_blank" rel="noreferrer">
           Pesha.work
         </a>

@@ -31,11 +31,37 @@ With the site running, `npm run test:browser` checks experience tabs, project ex
 - Experience: `content/jobs/<company>/index.md`
 - Featured projects: `content/featured/<project>/index.md`
 - Other projects and archive: `content/projects/*.md`
-- Blog posts: `content/posts/<post>/index.md`
+- Blog posts: `blog/<post>.md` or `blog/<post>/index.md`
+- Original Pensieve content: `content/posts/<post>/index.md`
 - SEO defaults: `src/lib/site.js`
 - Resume, social preview, downloads: `assets/static/`
 
 Markdown frontmatter still controls titles, dates, ordering, links, technologies, and images. Featured projects sort by `date` ascending; experience and other projects sort descending, as before. `cta` is optional. Posts marked `draft: true` stay out of the blog index; existing direct post and tag URLs are preserved.
+
+## Publish a blog post
+
+The new blog is at `/blog/`, linked from desktop and mobile navigation. It uses the existing navy/mint theme, fonts, header, footer, and Markdown code highlighting, with search, topic filters, dates, and reading times.
+
+Add a file in the root-level `blog/` folder:
+
+```markdown
+---
+title: 'My first post'
+date: '2026-10-18'
+description: 'A short introduction to the article.'
+tags:
+  - Data Engineering
+draft: true
+---
+
+Your Markdown article goes here.
+```
+
+Open http://localhost:8000/blog/ after running `npm start`. Drafts are visible locally, with a preview badge, and return 404 in production. To publish, set `draft: false`, commit the file, and deploy through your usual Vercel branch workflow. Production content changes require a new build/deployment.
+
+The filename becomes the URL (`my-first-post.md` → `/blog/my-first-post/`). A folder containing `index.md` uses the folder name. The loader supports nested folders, optional custom slugs, relative images, Markdown tables, task lists, and syntax-highlighted code. Invalid metadata and duplicate URLs fail the build with the filename in the error.
+
+See [blog/README.md](blog/README.md) for the full authoring guide. `hello-world.md` is a starter post to replace with your own writing; `drafts/my-next-post.md` is an unpublished example. Existing `/pensieve/` URLs remain available separately.
 
 `src/lib/content.cjs` loads Markdown directly at build time and on development page requests. There is no GraphQL schema or Gatsby dependency. Restart development after changing server configuration; rebuild production after changing content.
 
