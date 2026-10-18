@@ -1,6 +1,9 @@
 module.exports = {
   email: 'roshanrays236@gmail.com',
 
+  // Set to true to display Other Noteworthy Projects on the homepage.
+  showProjects: false,
+
   socialMedia: [
     {
       name: 'GitHub',

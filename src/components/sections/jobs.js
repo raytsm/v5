@@ -170,6 +170,7 @@ const Jobs = ({ data }) => {
   const [activeTabId, setActiveTabId] = useState(0);
   const [tabFocus, setTabFocus] = useState(null);
   const tabs = useRef([]);
+  const panelRefs = useRef(jobsData.map(() => React.createRef()));
   const revealContainer = useRef(null);
   const prefersReducedMotion = usePrefersReducedMotion();
 
@@ -254,8 +255,14 @@ const Jobs = ({ data }) => {
               const { title, url, company, range } = frontmatter;
 
               return (
-                <CSSTransition key={i} in={activeTabId === i} timeout={250} classNames="fade">
+                <CSSTransition
+                  key={i}
+                  nodeRef={panelRefs.current[i]}
+                  in={activeTabId === i}
+                  timeout={250}
+                  classNames="fade">
                   <StyledTabPanel
+                    ref={panelRefs.current[i]}
                     id={`panel-${i}`}
                     role="tabpanel"
                     tabIndex={activeTabId === i ? '0' : '-1'}

@@ -166,11 +166,13 @@ const StyledProject = styled.li`
   }
 `;
 
+// Enable this section by setting showProjects to true in src/config.js.
 const Projects = ({ data }) => {
   const [showMore, setShowMore] = useState(false);
   const revealTitle = useRef(null);
   const revealArchiveLink = useRef(null);
   const revealProjects = useRef([]);
+  const projectRefs = useRef(data.projects.edges.map(() => React.createRef()));
   const prefersReducedMotion = usePrefersReducedMotion();
 
   useEffect(() => {
@@ -262,12 +264,16 @@ const Projects = ({ data }) => {
               projectsToShow.map(({ node }, i) => (
                 <CSSTransition
                   key={i}
+                  nodeRef={projectRefs.current[i]}
                   classNames="fadeup"
                   timeout={i >= GRID_LIMIT ? (i - GRID_LIMIT) * 300 : 300}
                   exit={false}>
                   <StyledProject
                     key={i}
-                    ref={el => (revealProjects.current[i] = el)}
+                    ref={el => {
+                      revealProjects.current[i] = el;
+                      projectRefs.current[i].current = el;
+                    }}
                     style={{
                       transitionDelay: `${i >= GRID_LIMIT ? (i - GRID_LIMIT) * 100 : 0}ms`,
                     }}>

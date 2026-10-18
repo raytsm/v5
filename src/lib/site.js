@@ -1,5 +1,5 @@
 module.exports = {
-  title: 'Brittany Chiang',
+  title: 'Roshan Thapa',
   description:
     'Brittany Chiang is a software engineer who specializes in building (and occasionally designing) exceptional digital experiences.',
   siteUrl: 'https://brittanychiang.com',

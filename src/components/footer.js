@@ -77,7 +77,7 @@ const Footer = () => {
     if (process.env.NODE_ENV !== 'production') {
       return;
     }
-    fetch('https://api.github.com/repos/bchiang7/v4')
+    fetch('https://api.github.com/repos/raytsm/v5')
       .then(response => response.json())
       .then(json => {
         const { stargazers_count, forks_count } = json;
@@ -104,9 +104,9 @@ const Footer = () => {
         </ul>
       </StyledSocialLinks>
 
-      <StyledCredit tabindex="-1">
-        <a href="https://github.com/bchiang7/v4">
-          <div>Designed &amp; Built by Brittany Chiang</div>
+      <StyledCredit tabIndex="-1">
+        <a href="https://github.com/raytsm/v5" target="_blank" rel="noopener noreferrer">
+          <div>Redesigned and Rebuilt by Roshan Thapa</div>
 
           {githubInfo.stars && githubInfo.forks && (
             <div className="github-stats">
@@ -121,6 +121,11 @@ const Footer = () => {
             </div>
           )}
         </a>
+        <div>
+          <a href="https://github.com/bchiang7/v4" target="_blank" rel="noopener noreferrer">
+            Forked from Brittany Chiang/v4
+          </a>
+        </div>
       </StyledCredit>
     </StyledFooter>
   );

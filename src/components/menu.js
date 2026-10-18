@@ -154,7 +154,7 @@ const StyledSidebar = styled.aside`
   }
 `;
 
-const Menu = () => {
+const Menu = React.forwardRef(function Menu(_props, ref) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -240,7 +240,7 @@ const Menu = () => {
   useOnClickOutside(wrapperRef, () => setMenuOpen(false));
 
   return (
-    <StyledMenu>
+    <StyledMenu ref={ref}>
       <div ref={wrapperRef}>
         <StyledHamburgerButton
           onClick={toggleMenu}
@@ -274,6 +274,6 @@ const Menu = () => {
       </div>
     </StyledMenu>
   );
-};
+});
 
 export default Menu;

@@ -1,6 +1,7 @@
 const { chromium } = require('playwright');
-const base = process.env.TEST_BASE_URL || 'http://127.0.0.1:8000';
+const base = process.env.TEST_BASE_URL || 'http://localhost:8000';
 const assert = require('assert');
+const { showProjects } = require('../src/config');
 (async () => {
   const browser = await chromium.launch({ channel: 'chrome' });
   try {
@@ -15,6 +16,16 @@ const assert = require('assert');
       await context.route('https://api.github.com/**', route => route.fulfill({ json: {} }));
       const page = await context.newPage();
       page.on('pageerror', error => failures.push(`${page.url()}: ${error.message}`));
+      page.on('console', message => {
+        if (
+          ['error', 'warning'].includes(message.type()) &&
+          /Invalid hook call|findDOMNode|Warning:|Hydration failed|hydration mismatch/i.test(
+            message.text(),
+          )
+        ) {
+          failures.push(`${page.url()}: ${message.text()}`);
+        }
+      });
       await page.goto(`${base}/`, { waitUntil: 'domcontentloaded' });
       await page.waitForSelector('#about', { state: 'attached', timeout: 20000 });
       await page.waitForTimeout(reducedMotion === 'reduce' ? 300 : 3000);
@@ -28,21 +39,21 @@ const assert = require('assert');
         ),
       );
       const cards = page.locator('section').filter({ hasText: 'Other Noteworthy Projects' });
-      assert.strictEqual(
-        (await cards.locator('li.project').count()) ||
-          (await cards.locator('ul.projects-grid > li').count()),
-        6,
-      );
-      await page.getByRole('button', { name: 'Show More' }).click();
-      await page.getByRole('button', { name: 'Show Less' }).waitFor();
-      await page.getByRole('button', { name: 'Show Less' }).click();
-      await page.getByRole('button', { name: 'Show More' }).waitFor();
+      if (showProjects) {
+        assert.strictEqual(await cards.locator('ul.projects-grid > li').count(), 6);
+        await page.getByRole('button', { name: 'Show More' }).click();
+        await page.getByRole('button', { name: 'Show Less' }).waitFor();
+        await page.getByRole('button', { name: 'Show Less' }).click();
+        await page.getByRole('button', { name: 'Show More' }).waitFor();
+      } else {
+        assert.strictEqual(await cards.count(), 0);
+      }
       await page.goto(`${base}/archive/`, { waitUntil: 'domcontentloaded' });
       assert.strictEqual(await page.locator('tbody tr').count(), 40);
       await page.goto(`${base}/pensieve/`, { waitUntil: 'domcontentloaded' });
       await page.getByRole('link', { name: 'Dark Mode Toggle', exact: true }).click();
       await page.waitForURL('**/pensieve/dark-mode-toggle/');
-      await page.waitForFunction(() => document.title === 'Dark Mode Toggle | Brittany Chiang');
+      await page.waitForFunction(() => document.title === 'Dark Mode Toggle | Roshan Thapa');
       await page.getByRole('link', { name: '#Theming', exact: true }).click();
       await page.waitForURL('**/pensieve/tags/theming/');
       assert((await page.locator('main').innerText()).includes('Dark Mode Toggle'));
@@ -67,7 +78,7 @@ const assert = require('assert');
       console.log(`Interactions passed: ${reducedMotion}`);
     }
     assert.deepStrictEqual(failures, []);
-    console.log('No browser runtime errors in either motion mode.');
+    console.log('No browser runtime errors or React warnings in either motion mode.');
   } finally {
     await browser.close();
   }
