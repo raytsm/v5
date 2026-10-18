@@ -16,18 +16,21 @@ const SiteHead = ({ title, description, image }) => {
   return (
     <Head>
       <title>{title ? `${title} | ${site.title}` : site.title}</title>
-      <meta name="description" content={seo.description} />
-      <meta name="image" content={seo.image} />
-      <meta property="og:title" content={seo.title} />
-      <meta property="og:description" content={seo.description} />
-      <meta property="og:image" content={seo.image} />
-      <meta property="og:url" content={seo.url} />
-      <meta property="og:type" content="website" />
-      <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:creator" content={site.twitterUsername} />
-      <meta name="twitter:title" content={seo.title} />
-      <meta name="twitter:description" content={seo.description} />
-      <meta name="twitter:image" content={seo.image} />
+      <link rel="canonical" href={seo.url} key="canonical" />
+      <meta name="description" content={seo.description} key="description" />
+      <meta name="image" content={seo.image} key="image" />
+      <meta property="og:title" content={seo.title} key="og:title" />
+      <meta property="og:description" content={seo.description} key="og:description" />
+      <meta property="og:image" content={seo.image} key="og:image" />
+      <meta property="og:url" content={seo.url} key="og:url" />
+      <meta property="og:type" content="website" key="og:type" />
+      <meta name="twitter:card" content="summary_large_image" key="twitter:card" />
+      {site.twitterUsername && (
+        <meta name="twitter:creator" content={site.twitterUsername} key="twitter:creator" />
+      )}
+      <meta name="twitter:title" content={seo.title} key="twitter:title" />
+      <meta name="twitter:description" content={seo.description} key="twitter:description" />
+      <meta name="twitter:image" content={seo.image} key="twitter:image" />
       <meta name="google-site-verification" content="DCl7VAf9tcz6eD9gb67NfkNnJ1PKRNcg8qQiwpbx9Lk" />
     </Head>
   );

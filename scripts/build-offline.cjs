@@ -15,6 +15,7 @@ const urls = [
   '/archive/',
   '/pensieve/',
   '/pensieve/tags/',
+  '/blog/',
   ...walk(path.join(root, '.next/static')).map(
     file =>
       `/_next/static/${path

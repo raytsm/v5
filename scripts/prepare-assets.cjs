@@ -4,6 +4,7 @@ const matter = require('gray-matter');
 const kebabCase = require('lodash/kebabCase');
 const site = require('../src/lib/site');
 const { generateIcons } = require('./generate-icons.cjs');
+const { getBlogPosts } = require('../src/lib/blog.cjs');
 
 const root = path.resolve(__dirname, '..');
 const publicDir = path.join(root, 'public');
@@ -38,11 +39,12 @@ const walk = directory =>
 const posts = walk(path.join(root, 'content/posts'))
   .filter(file => file.endsWith('.md'))
   .map(file => matter.read(file).data);
-const routes = new Set(['/', '/archive/', '/pensieve/', '/pensieve/tags/']);
+const routes = new Set(['/', '/archive/', '/pensieve/', '/pensieve/tags/', '/blog/']);
 for (const post of posts) {
   routes.add(`${post.slug.replace(/\/$/, '')}/`);
   for (const tag of post.tags || []) routes.add(`/pensieve/tags/${kebabCase(tag)}/`);
 }
+for (const post of getBlogPosts()) routes.add(post.url);
 const urls = [...routes].map(route => `<url><loc>${site.siteUrl}${route}</loc></url>`).join('');
 fs.writeFileSync(
   path.join(publicDir, 'sitemap.xml'),
