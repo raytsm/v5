@@ -125,7 +125,14 @@ const About = () => {
     sr.reveal(revealContainer.current, srConfig());
   }, []);
 
-  const skills = ['JavaScript (ES6+)', 'TypeScript', 'React', 'Eleventy', 'Node.js', 'WordPress'];
+  const skills = [
+    'Python',
+    'PostgreSQL',
+    'Scrapy',
+    'Playright',
+    'Apache Airflow',
+    'Amazon Web Services',
+  ];
 
   return (
     <StyledAboutSection id="about" ref={revealContainer}>
@@ -135,31 +142,28 @@ const About = () => {
         <StyledText>
           <div>
             <p>
-              Hello! My name is Brittany and I enjoy creating things that live on the internet. My
-              interest in web development started back in 2012 when I decided to try editing custom
-              Tumblr themes — turns out hacking together a custom reblog button taught me a lot
-              about HTML &amp; CSS!
+              Hello! I'm Roshan, and I enjoy turning raw data into meaningful insights and
+              intelligent solutions. My curiosity about how data works led me into data engineering
+              and machine learning, where I love building efficient data pipelines, exploring
+              patterns, and creating systems that solve real-world problems.
             </p>
 
             <p>
               Fast-forward to today, and I’ve had the privilege of working at{' '}
-              <a href="https://us.mullenlowe.com/">an advertising agency</a>,{' '}
-              <a href="https://starry.com/">a start-up</a>,{' '}
-              <a href="https://www.apple.com/">a huge corporation</a>, and{' '}
-              <a href="https://scout.camd.northeastern.edu/">a student-led design studio</a>. My
-              main focus these days is building accessible, inclusive products and digital
-              experiences at <a href="https://upstatement.com/">Upstatement</a> for a variety of
-              clients.
+              <a href="https://www.thankadigital.com">a company that makes web and mobile apps</a>,
+              and <a href="https://www.yetinepal.com">another similar company </a> My main focus
+              these days is building data infrastructure from groundup at{' '}
+              <a href="https://pesha.work/">Pesha</a>.
             </p>
 
-            <p>
+            {/* <p>
               I also recently{' '}
               <a href="https://www.newline.co/courses/build-a-spotify-connected-app">
                 launched a course
               </a>{' '}
               that covers everything you need to build a web app with the Spotify API using Node
               &amp; React.
-            </p>
+            </p> */}
 
             <p>Here are a few technologies I’ve been working with recently:</p>
           </div>
@@ -173,7 +177,7 @@ const About = () => {
           <div className="wrapper">
             <StaticImage
               className="img"
-              src="../../images/me.jpg"
+              src="../../images/me.jpeg"
               width={500}
               quality={95}
               formats={['AUTO', 'WEBP', 'AVIF']}

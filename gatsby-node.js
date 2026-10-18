@@ -7,6 +7,15 @@
 const path = require('path');
 const _ = require('lodash');
 
+exports.createSchemaCustomization = ({ actions }) => {
+  // Keep the optional CTA queryable even when no Markdown entry defines it.
+  actions.createTypes(`
+    type MarkdownRemarkFrontmatter {
+      cta: String
+    }
+  `);
+};
+
 exports.createPages = async ({ actions, graphql, reporter }) => {
   const { createPage } = actions;
   const postTemplate = path.resolve(`src/templates/post.js`);
