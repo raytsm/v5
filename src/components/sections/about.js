@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
-import { StaticImage } from 'gatsby-plugin-image';
+import PropTypes from 'prop-types';
+import ResponsiveImage from '@components/responsive-image';
 import styled from 'styled-components';
 import { srConfig } from '@config';
 import sr from '@utils/sr';
@@ -113,7 +114,7 @@ const StyledPic = styled.div`
   }
 `;
 
-const About = () => {
+const About = ({ image }) => {
   const revealContainer = useRef(null);
   const prefersReducedMotion = usePrefersReducedMotion();
 
@@ -123,7 +124,7 @@ const About = () => {
     }
 
     sr.reveal(revealContainer.current, srConfig());
-  }, []);
+  }, [prefersReducedMotion]);
 
   const skills = [
     'Python',
@@ -175,19 +176,16 @@ const About = () => {
 
         <StyledPic>
           <div className="wrapper">
-            <StaticImage
-              className="img"
-              src="../../images/me.jpeg"
-              width={500}
-              quality={95}
-              formats={['AUTO', 'WEBP', 'AVIF']}
-              alt="Headshot"
-            />
+            <ResponsiveImage className="img" image={image} alt="Headshot" />
           </div>
         </StyledPic>
       </div>
     </StyledAboutSection>
   );
+};
+
+About.propTypes = {
+  image: PropTypes.object.isRequired,
 };
 
 export default About;

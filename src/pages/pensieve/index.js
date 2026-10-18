@@ -1,8 +1,8 @@
 import React from 'react';
-import { graphql, Link } from 'gatsby';
+import Link from 'next/link';
 import kebabCase from 'lodash/kebabCase';
 import PropTypes from 'prop-types';
-import { Helmet } from 'react-helmet';
+import PageTitle from '@components/page-title';
 import styled from 'styled-components';
 import { Layout } from '@components';
 import { IconBookmark } from '@components/icons';
@@ -147,7 +147,7 @@ const PensievePage = ({ location, data }) => {
 
   return (
     <Layout location={location}>
-      <Helmet title="Pensieve" />
+      <PageTitle title="Pensieve" />
 
       <StyledMainContainer>
         <header>
@@ -164,7 +164,7 @@ const PensievePage = ({ location, data }) => {
             posts.map(({ node }, i) => {
               const { frontmatter } = node;
               const { title, description, slug, date, tags } = frontmatter;
-              const formattedDate = new Date(date).toLocaleDateString();
+              const formattedDate = new Date(date).toLocaleDateString('en-US', { timeZone: 'UTC' });
 
               return (
                 <StyledPost key={i}>
@@ -174,7 +174,7 @@ const PensievePage = ({ location, data }) => {
                         <IconBookmark />
                       </div>
                       <h5 className="post__title">
-                        <Link to={slug}>{title}</Link>
+                        <Link href={slug}>{title}</Link>
                       </h5>
                       <p className="post__desc">{description}</p>
                     </header>
@@ -184,7 +184,9 @@ const PensievePage = ({ location, data }) => {
                       <ul className="post__tags">
                         {tags.map((tag, i) => (
                           <li key={i}>
-                            <Link to={`/pensieve/tags/${kebabCase(tag)}/`} className="inline-link">
+                            <Link
+                              href={`/pensieve/tags/${kebabCase(tag)}/`}
+                              className="inline-link">
                               #{tag}
                             </Link>
                           </li>
@@ -208,25 +210,8 @@ PensievePage.propTypes = {
 
 export default PensievePage;
 
-export const pageQuery = graphql`
-  {
-    allMarkdownRemark(
-      filter: { fileAbsolutePath: { regex: "/content/posts/" }, frontmatter: { draft: { ne: true } } }
-      sort: { fields: [frontmatter___date], order: DESC }
-    ) {
-      edges {
-        node {
-          frontmatter {
-            title
-            description
-            slug
-            date
-            tags
-            draft
-          }
-          html
-        }
-      }
-    }
-  }
-`;
+export async function getStaticProps() {
+  const { getCollection, edges } = require('@lib/content.cjs');
+  const posts = await getCollection('posts', { publishedOnly: true });
+  return { props: { data: { allMarkdownRemark: edges(posts) } } };
+}

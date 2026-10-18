@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link, useStaticQuery, graphql } from 'gatsby';
+import PropTypes from 'prop-types';
+import Link from 'next/link';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import styled from 'styled-components';
 import { srConfig } from '@config';
@@ -165,31 +166,7 @@ const StyledProject = styled.li`
   }
 `;
 
-const Projects = () => {
-  const data = useStaticQuery(graphql`
-    query {
-      projects: allMarkdownRemark(
-        filter: {
-          fileAbsolutePath: { regex: "/content/projects/" }
-          frontmatter: { showInProjects: { ne: false } }
-        }
-        sort: { fields: [frontmatter___date], order: DESC }
-      ) {
-        edges {
-          node {
-            frontmatter {
-              title
-              tech
-              github
-              external
-            }
-            html
-          }
-        }
-      }
-    }
-  `);
-
+const Projects = ({ data }) => {
   const [showMore, setShowMore] = useState(false);
   const revealTitle = useRef(null);
   const revealArchiveLink = useRef(null);
@@ -204,7 +181,7 @@ const Projects = () => {
     sr.reveal(revealTitle.current, srConfig());
     sr.reveal(revealArchiveLink.current, srConfig());
     revealProjects.current.forEach((ref, i) => sr.reveal(ref, srConfig(i * 100)));
-  }, []);
+  }, [prefersReducedMotion]);
 
   const GRID_LIMIT = 6;
   const projects = data.projects.edges.filter(({ node }) => node);
@@ -267,7 +244,7 @@ const Projects = () => {
     <StyledProjectsSection>
       <h2 ref={revealTitle}>Other Noteworthy Projects</h2>
 
-      <Link className="inline-link archive-link" to="/archive" ref={revealArchiveLink}>
+      <Link className="inline-link archive-link" href="/archive" ref={revealArchiveLink}>
         view the archive
       </Link>
 
@@ -307,6 +284,10 @@ const Projects = () => {
       </button>
     </StyledProjectsSection>
   );
+};
+
+Projects.propTypes = {
+  data: PropTypes.object.isRequired,
 };
 
 export default Projects;

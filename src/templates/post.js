@@ -1,8 +1,8 @@
 import React from 'react';
-import { graphql, Link } from 'gatsby';
+import Link from 'next/link';
 import kebabCase from 'lodash/kebabCase';
 import PropTypes from 'prop-types';
-import { Helmet } from 'react-helmet';
+import PageTitle from '@components/page-title';
 import styled from 'styled-components';
 import { Layout } from '@components';
 
@@ -56,12 +56,12 @@ const PostTemplate = ({ data, location }) => {
 
   return (
     <Layout location={location}>
-      <Helmet title={title} />
+      <PageTitle title={title} />
 
       <StyledPostContainer>
         <span className="breadcrumb">
           <span className="arrow">&larr;</span>
-          <Link to="/pensieve">All memories</Link>
+          <Link href="/pensieve">All memories</Link>
         </span>
 
         <StyledPostHeader>
@@ -69,6 +69,7 @@ const PostTemplate = ({ data, location }) => {
           <p className="subtitle">
             <time>
               {new Date(date).toLocaleDateString('en-US', {
+                timeZone: 'UTC',
                 year: 'numeric',
                 month: 'long',
                 day: 'numeric',
@@ -78,7 +79,7 @@ const PostTemplate = ({ data, location }) => {
             {tags &&
               tags.length > 0 &&
               tags.map((tag, i) => (
-                <Link key={i} to={`/pensieve/tags/${kebabCase(tag)}/`} className="tag">
+                <Link key={i} href={`/pensieve/tags/${kebabCase(tag)}/`} className="tag">
                   #{tag}
                 </Link>
               ))}
@@ -97,18 +98,3 @@ PostTemplate.propTypes = {
   data: PropTypes.object,
   location: PropTypes.object,
 };
-
-export const pageQuery = graphql`
-  query($path: String!) {
-    markdownRemark(frontmatter: { slug: { eq: $path } }) {
-      html
-      frontmatter {
-        title
-        description
-        date
-        slug
-        tags
-      }
-    }
-  }
-`;

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'gatsby';
-import { Helmet } from 'react-helmet';
+import Link from 'next/link';
+import PageTitle from '@components/page-title';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
@@ -38,19 +38,19 @@ const NotFoundPage = ({ location }) => {
 
     const timeout = setTimeout(() => setIsMounted(true), navDelay);
     return () => clearTimeout(timeout);
-  }, []);
+  }, [prefersReducedMotion]);
 
   const content = (
     <StyledMainContainer className="fillHeight">
       <StyledTitle>404</StyledTitle>
       <StyledSubtitle>Page Not Found</StyledSubtitle>
-      <StyledHomeButton to="/">Go Home</StyledHomeButton>
+      <StyledHomeButton href="/">Go Home</StyledHomeButton>
     </StyledMainContainer>
   );
 
   return (
     <Layout location={location}>
-      <Helmet title="Page Not Found" />
+      <PageTitle title="Page Not Found" />
 
       {prefersReducedMotion ? (
         <>{content}</>

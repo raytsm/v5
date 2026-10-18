@@ -1,0 +1,77 @@
+const { chromium } = require('playwright');
+const base = process.env.TEST_BASE_URL || 'http://127.0.0.1:8000';
+const assert = require('assert');
+(async () => {
+  const browser = await chromium.launch({ channel: 'chrome' });
+  try {
+    const failures = [];
+    for (const reducedMotion of ['reduce', 'no-preference']) {
+      const context = await browser.newContext({
+        viewport: { width: 1440, height: 900 },
+        locale: 'en-US',
+        timezoneId: 'America/Los_Angeles',
+        reducedMotion,
+      });
+      await context.route('https://api.github.com/**', route => route.fulfill({ json: {} }));
+      const page = await context.newPage();
+      page.on('pageerror', error => failures.push(`${page.url()}: ${error.message}`));
+      await page.goto(`${base}/`, { waitUntil: 'domcontentloaded' });
+      await page.waitForSelector('#about', { state: 'attached', timeout: 20000 });
+      await page.waitForTimeout(reducedMotion === 'reduce' ? 300 : 3000);
+      assert(await page.locator('h1').isVisible(), 'Hero heading missing');
+      const tabs = page.locator('[role=tab]');
+      await tabs.nth(1).click();
+      assert.strictEqual(await tabs.nth(1).getAttribute('aria-selected'), 'true');
+      assert(
+        (await page.locator('[role=tabpanel]:visible').innerText()).includes(
+          'Building Data Infrastructure',
+        ),
+      );
+      const cards = page.locator('section').filter({ hasText: 'Other Noteworthy Projects' });
+      assert.strictEqual(
+        (await cards.locator('li.project').count()) ||
+          (await cards.locator('ul.projects-grid > li').count()),
+        6,
+      );
+      await page.getByRole('button', { name: 'Show More' }).click();
+      await page.getByRole('button', { name: 'Show Less' }).waitFor();
+      await page.getByRole('button', { name: 'Show Less' }).click();
+      await page.getByRole('button', { name: 'Show More' }).waitFor();
+      await page.goto(`${base}/archive/`, { waitUntil: 'domcontentloaded' });
+      assert.strictEqual(await page.locator('tbody tr').count(), 40);
+      await page.goto(`${base}/pensieve/`, { waitUntil: 'domcontentloaded' });
+      await page.getByRole('link', { name: 'Dark Mode Toggle', exact: true }).click();
+      await page.waitForURL('**/pensieve/dark-mode-toggle/');
+      await page.waitForFunction(() => document.title === 'Dark Mode Toggle | Brittany Chiang');
+      await page.getByRole('link', { name: '#Theming', exact: true }).click();
+      await page.waitForURL('**/pensieve/tags/theming/');
+      assert((await page.locator('main').innerText()).includes('Dark Mode Toggle'));
+      const response = await page.goto(`${base}/this-does-not-exist/`, {
+        waitUntil: 'domcontentloaded',
+      });
+      assert.strictEqual(response.status(), 404);
+      await page.getByRole('link', { name: 'Go Home' }).waitFor();
+      await page.setViewportSize({ width: 390, height: 844 });
+      await page.goto(`${base}/`, { waitUntil: 'domcontentloaded' });
+      await page.waitForSelector('#about', { state: 'attached', timeout: 20000 });
+      await page.waitForTimeout(reducedMotion === 'reduce' ? 300 : 3000);
+      await page.getByRole('button', { name: 'Menu', exact: true }).click();
+      assert(await page.locator('body').evaluate(el => el.classList.contains('blur')));
+      await page.locator('aside').getByRole('link', { name: 'Experience' }).click();
+      assert(!(await page.locator('body').evaluate(el => el.classList.contains('blur'))));
+      assert(page.url().endsWith('#jobs'));
+      const resume = await context.request.get(`${base}/resume.pdf`);
+      assert(resume.ok());
+      assert(resume.headers()['content-type'].includes('pdf'));
+      await context.close();
+      console.log(`Interactions passed: ${reducedMotion}`);
+    }
+    assert.deepStrictEqual(failures, []);
+    console.log('No browser runtime errors in either motion mode.');
+  } finally {
+    await browser.close();
+  }
+})().catch(error => {
+  console.error(error);
+  process.exit(1);
+});

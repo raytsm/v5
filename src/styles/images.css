@@ -1,0 +1,27 @@
+/* Retain the original image layout rules so existing component styles stay identical. */
+.gatsby-image-wrapper {
+  position: relative;
+  overflow: hidden;
+}
+.gatsby-image-wrapper-constrained {
+  display: inline-block;
+}
+.gatsby-image-wrapper img {
+  bottom: 0;
+  height: 100%;
+  left: 0;
+  margin: 0;
+  max-width: none;
+  padding: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 100%;
+  object-fit: cover;
+}
+.gatsby-image-wrapper [data-main-image] {
+  opacity: 0;
+  transform: translateZ(0);
+  transition: opacity 0.25s linear;
+  will-change: opacity;
+}

@@ -1,4 +1,18 @@
 {
   "root": true,
-  "extends": "@upstatement/eslint-config/react"
+  "extends": ["@upstatement/eslint-config/react", "prettier"],
+  "parserOptions": {
+    "babelOptions": {
+      "presets": ["@babel/preset-react"]
+    }
+  },
+  "settings": {
+    "react": { "version": "detect" }
+  },
+  "overrides": [
+    {
+      "files": ["scripts/**/*.cjs", "tests/**/*.cjs"],
+      "rules": { "no-console": "off" }
+    }
+  ]
 }

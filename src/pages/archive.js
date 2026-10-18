@@ -1,7 +1,6 @@
 import React, { useRef, useEffect } from 'react';
-import { graphql } from 'gatsby';
 import PropTypes from 'prop-types';
-import { Helmet } from 'react-helmet';
+import PageTitle from '@components/page-title';
 import styled from 'styled-components';
 import { srConfig } from '@config';
 import sr from '@utils/sr';
@@ -144,11 +143,11 @@ const ArchivePage = ({ location, data }) => {
     sr.reveal(revealTitle.current, srConfig());
     sr.reveal(revealTable.current, srConfig(200, 0));
     revealProjects.current.forEach((ref, i) => sr.reveal(ref, srConfig(i * 10)));
-  }, []);
+  }, [prefersReducedMotion]);
 
   return (
     <Layout location={location}>
-      <Helmet title="Archive" />
+      <PageTitle title="Archive" />
 
       <main>
         <header ref={revealTitle}>
@@ -182,7 +181,7 @@ const ArchivePage = ({ location, data }) => {
                   } = node.frontmatter;
                   return (
                     <tr key={i} ref={el => (revealProjects.current[i] = el)}>
-                      <td className="overline year">{`${new Date(date).getFullYear()}`}</td>
+                      <td className="overline year">{`${new Date(date).getUTCFullYear()}`}</td>
 
                       <td className="title">{title}</td>
 
@@ -242,27 +241,7 @@ ArchivePage.propTypes = {
 
 export default ArchivePage;
 
-export const pageQuery = graphql`
-  {
-    allMarkdownRemark(
-      filter: { fileAbsolutePath: { regex: "/content/projects/" } }
-      sort: { fields: [frontmatter___date], order: DESC }
-    ) {
-      edges {
-        node {
-          frontmatter {
-            date
-            title
-            tech
-            github
-            external
-            ios
-            android
-            company
-          }
-          html
-        }
-      }
-    }
-  }
-`;
+export async function getStaticProps() {
+  const { getCollection, edges } = require('@lib/content.cjs');
+  return { props: { data: { allMarkdownRemark: edges(await getCollection('projects')) } } };
+}

@@ -1,0 +1,8 @@
+node_modules/
+.next/
+.cache/
+public/
+out/
+coverage/
+playwright-report/
+test-results/

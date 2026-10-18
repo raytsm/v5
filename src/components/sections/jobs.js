@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useStaticQuery, graphql } from 'gatsby';
+import PropTypes from 'prop-types';
 import { CSSTransition } from 'react-transition-group';
 import styled from 'styled-components';
 import { srConfig } from '@config';
@@ -164,29 +164,7 @@ const StyledTabPanel = styled.div`
   }
 `;
 
-const Jobs = () => {
-  const data = useStaticQuery(graphql`
-    query {
-      jobs: allMarkdownRemark(
-        filter: { fileAbsolutePath: { regex: "/content/jobs/" } }
-        sort: { fields: [frontmatter___date], order: DESC }
-      ) {
-        edges {
-          node {
-            frontmatter {
-              title
-              company
-              location
-              range
-              url
-            }
-            html
-          }
-        }
-      }
-    }
-  `);
-
+const Jobs = ({ data }) => {
   const jobsData = data.jobs.edges;
 
   const [activeTabId, setActiveTabId] = useState(0);
@@ -201,7 +179,7 @@ const Jobs = () => {
     }
 
     sr.reveal(revealContainer.current, srConfig());
-  }, []);
+  }, [prefersReducedMotion]);
 
   const focusTab = () => {
     if (tabs.current[tabFocus]) {
@@ -305,6 +283,10 @@ const Jobs = () => {
       </div>
     </StyledJobsSection>
   );
+};
+
+Jobs.propTypes = {
+  data: PropTypes.object.isRequired,
 };
 
 export default Jobs;

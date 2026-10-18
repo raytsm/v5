@@ -7,21 +7,27 @@ const StyledMainContainer = styled.main`
   counter-reset: section;
 `;
 
-const IndexPage = ({ location }) => (
+const IndexPage = ({ location, data }) => (
   <Layout location={location}>
     <StyledMainContainer className="fillHeight">
       <Hero />
-      <About />
-      <Jobs />
-      <Featured />
-      <Projects />
+      <About image={data.headshot} />
+      <Jobs data={data} />
+      <Featured data={data} />
+      <Projects data={data} />
       <Contact />
     </StyledMainContainer>
   </Layout>
 );
 
 IndexPage.propTypes = {
+  data: PropTypes.object.isRequired,
   location: PropTypes.object.isRequired,
 };
 
 export default IndexPage;
+
+export async function getStaticProps() {
+  const { getHomeData } = require('@lib/content.cjs');
+  return { props: { data: await getHomeData() } };
+}

@@ -1,87 +1,58 @@
-<div align="center">
-  <img alt="Logo" src="https://raw.githubusercontent.com/bchiang7/v4/main/src/images/logo.png" width="100" />
-</div>
-<h1 align="center">
-  brittanychiang.com - v4
-</h1>
-<p align="center">
-  The fourth iteration of <a href="https://brittanychiang.com" target="_blank">brittanychiang.com</a> built with <a href="https://www.gatsbyjs.org/" target="_blank">Gatsby</a> and hosted with <a href="https://www.netlify.com/" target="_blank">Netlify</a>
-</p>
-<p align="center">
-  Previous iterations:
-  <a href="https://github.com/bchiang7/v1" target="_blank">v1</a>,
-  <a href="https://github.com/bchiang7/v2" target="_blank">v2</a>,
-  <a href="https://github.com/bchiang7/bchiang7.github.io" target="_blank">v3</a>
-</p>
-<p align="center">
-  <a href="https://app.netlify.com/sites/brittanychiang/deploys" target="_blank">
-    <img src="https://api.netlify.com/api/v1/badges/1963b488-7b78-48c9-9e2d-6fb5e47ab3af/deploy-status" alt="Netlify Status" />
-  </a>
-</p>
+# Personal Website V4 — Next.js
 
-![demo](https://raw.githubusercontent.com/bchiang7/v4/main/src/images/demo.png)
+The original portfolio design, styled-components styles, fonts, content, and animations, running on Next.js 16 with the Pages Router.
 
-## 🚨 Forking this repo (please read!)
+## Run locally
 
-Many people have contacted me asking me if they can use this code for their own website, and the answer to that question is usually **yes, with attribution**.
+Use Node.js 24 LTS (`nvm use`), then:
 
-I value keeping my site open source, but as you all know, _**plagiarism is bad**_. It's always disheartening whenever I find that someone has copied my site without giving me credit. I spent a non-trivial amount of effort building and designing this iteration of my website, and I am proud of it! All I ask of you all is to not claim this effort as your own.
+```sh
+npm install
+npm start
+```
 
-Please also note that I did not build this site with the intention of it being a starter theme, so if you have questions about implementation, please refer to the [Gatsby docs](https://www.gatsbyjs.org/docs/).
+Open http://localhost:8000. `npm run dev` and `npm run develop` also start the development server.
 
-### TL;DR
+## Production
 
-Yes, you can fork this repo. Please give me proper credit by linking back to [brittanychiang.com](https://brittanychiang.com). Thanks!
+```sh
+npm run build
+npm run serve
+```
 
-## 🛠 Installation & Set Up
+The site uses static generation for the homepage, archive, posts, and tag pages. Deploy with any host supporting Next.js. Run `npm run lint` to check JavaScript and `npm test` to check content loading and Markdown rendering.
 
-1. Install the Gatsby CLI
+With the site running, `npm run test:browser` checks experience tabs, project expansion, desktop and mobile navigation, post and tag links, downloads, 404 responses, and browser errors in both motion modes. The test uses locally installed Google Chrome and a US time zone to catch hydration problems. Set `TEST_BASE_URL` to test another local port.
 
-   ```sh
-   npm install -g gatsby-cli
-   ```
+## Edit content
 
-2. Install and use the correct version of Node using [NVM](https://github.com/nvm-sh/nvm)
+- Social links, email, navigation: `src/config.js`
+- Hero, about, contact copy: `src/components/sections/`
+- Experience: `content/jobs/<company>/index.md`
+- Featured projects: `content/featured/<project>/index.md`
+- Other projects and archive: `content/projects/*.md`
+- Blog posts: `content/posts/<post>/index.md`
+- SEO defaults: `src/lib/site.js`
+- Resume, social preview, downloads: `assets/static/`
 
-   ```sh
-   nvm install
-   ```
+Markdown frontmatter still controls titles, dates, ordering, links, technologies, and images. Featured projects sort by `date` ascending; experience and other projects sort descending, as before. `cta` is optional. Posts marked `draft: true` stay out of the blog index; existing direct post and tag URLs are preserved.
 
-3. Install dependencies
+`src/lib/content.cjs` loads Markdown directly at build time and on development page requests. There is no GraphQL schema or Gatsby dependency. Restart development after changing server configuration; rebuild production after changing content.
 
-   ```sh
-   yarn
-   ```
+## Assets and visual parity
 
-4. Start the development server
+`src/styles/` retains the original design. The `gatsby-*` CSS class names on images and highlighted code are compatibility hooks for that existing CSS; they do not require Gatsby.
 
-   ```sh
-   npm start
-   ```
+`assets/optimized/` retains the original responsive image bytes so existing photos, screenshots, and illustrations render identically. `src/lib/image-cache.json` maps those files to the SHA-256 hashes of their originals. When an original image changes or a new image is added, the content loader generates responsive AVIF, WebP, and fallback images using Sharp. `ResponsiveImage` preserves the existing image wrapper dimensions.
 
-## 🚀 Building and Running for Production
+The predev and prebuild scripts copy static files, original fonts, and retained optimized images into `public/`. Treat `public/` and `.next/` as generated output; edit `assets/static/`, `src/fonts/`, or the original content image instead.
 
-1. Generate a full static production build
+Stop the development server before running `npm run clean` or a production build. `npm run clean` removes only generated output.
 
-   ```sh
-   npm run build
-   ```
+Production builds include a sitemap, robots.txt, web manifest, and an offline worker. The worker replaces the previous Gatsby worker; development unregisters it so cached production pages cannot interfere with local edits.
 
-1. Preview the site as it will appear once deployed
+## Attribution
 
-   ```sh
-   npm run serve
-   ```
+Original design and implementation by [Brittany Chiang](https://github.com/bchiang7/v4). The original MIT license and attribution are retained.
 
-## 🎨 Color Reference
-
-| Color          | Hex                                                                |
-| -------------- | ------------------------------------------------------------------ |
-| Navy           | ![#0a192f](https://via.placeholder.com/10/0a192f?text=+) `#0a192f` |
-| Light Navy     | ![#112240](https://via.placeholder.com/10/0a192f?text=+) `#112240` |
-| Lightest Navy  | ![#233554](https://via.placeholder.com/10/303C55?text=+) `#233554` |
-| Slate          | ![#8892b0](https://via.placeholder.com/10/8892b0?text=+) `#8892b0` |
-| Light Slate    | ![#a8b2d1](https://via.placeholder.com/10/a8b2d1?text=+) `#a8b2d1` |
-| Lightest Slate | ![#ccd6f6](https://via.placeholder.com/10/ccd6f6?text=+) `#ccd6f6` |
-| White          | ![#e6f1ff](https://via.placeholder.com/10/e6f1ff?text=+) `#e6f1ff` |
-| Green          | ![#64ffda](https://via.placeholder.com/10/64ffda?text=+) `#64ffda` |
+React 18 is retained for compatibility with the original transition animations. Next.js 16 supports this combination through the Pages Router.

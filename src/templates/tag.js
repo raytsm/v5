@@ -1,8 +1,8 @@
 import React from 'react';
-import { Link, graphql } from 'gatsby';
+import Link from 'next/link';
 import kebabCase from 'lodash/kebabCase';
 import PropTypes from 'prop-types';
-import { Helmet } from 'react-helmet';
+import PageTitle from '@components/page-title';
 import styled from 'styled-components';
 import { Layout } from '@components';
 
@@ -51,18 +51,18 @@ const TagTemplate = ({ pageContext, data, location }) => {
 
   return (
     <Layout location={location}>
-      <Helmet title={`Tagged: #${tag}`} />
+      <PageTitle title={`Tagged: #${tag}`} />
 
       <StyledTagsContainer>
         <span className="breadcrumb">
           <span className="arrow">&larr;</span>
-          <Link to="/pensieve">All memories</Link>
+          <Link href="/pensieve">All memories</Link>
         </span>
 
         <h1>
           <span>#{tag}</span>
           <span>
-            <Link to="/pensieve/tags">View all tags</Link>
+            <Link href="/pensieve/tags">View all tags</Link>
           </span>
         </h1>
 
@@ -72,11 +72,12 @@ const TagTemplate = ({ pageContext, data, location }) => {
             return (
               <li key={slug}>
                 <h2>
-                  <Link to={slug}>{title}</Link>
+                  <Link href={slug}>{title}</Link>
                 </h2>
                 <p className="subtitle">
                   <time>
                     {new Date(date).toLocaleDateString('en-US', {
+                      timeZone: 'UTC',
                       year: 'numeric',
                       month: 'long',
                       day: 'numeric',
@@ -86,7 +87,7 @@ const TagTemplate = ({ pageContext, data, location }) => {
                   {tags &&
                     tags.length > 0 &&
                     tags.map((tag, i) => (
-                      <Link key={i} to={`/pensieve/tags/${kebabCase(tag)}/`} className="tag">
+                      <Link key={i} href={`/pensieve/tags/${kebabCase(tag)}/`} className="tag">
                         #{tag}
                       </Link>
                     ))}
@@ -122,26 +123,3 @@ TagTemplate.propTypes = {
   }),
   location: PropTypes.object,
 };
-
-export const pageQuery = graphql`
-  query($tag: String!) {
-    allMarkdownRemark(
-      limit: 2000
-      sort: { fields: [frontmatter___date], order: DESC }
-      filter: { frontmatter: { tags: { in: [$tag] } } }
-    ) {
-      totalCount
-      edges {
-        node {
-          frontmatter {
-            title
-            description
-            date
-            slug
-            tags
-          }
-        }
-      }
-    }
-  }
-`;

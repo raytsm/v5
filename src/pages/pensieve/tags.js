@@ -1,8 +1,8 @@
 import React from 'react';
-import { Link, graphql } from 'gatsby';
+import Link from 'next/link';
 import kebabCase from 'lodash/kebabCase';
 import PropTypes from 'prop-types';
-import { Helmet } from 'react-helmet';
+import PageTitle from '@components/page-title';
 import styled from 'styled-components';
 import { Layout } from '@components';
 
@@ -38,19 +38,19 @@ const TagsPage = ({
   location,
 }) => (
   <Layout location={location}>
-    <Helmet title="Tags" />
+    <PageTitle title="Tags" />
 
     <StyledTagsContainer>
       <span className="breadcrumb">
         <span className="arrow">&larr;</span>
-        <Link to="/pensieve">All memories</Link>
+        <Link href="/pensieve">All memories</Link>
       </span>
 
       <h1>Tags</h1>
       <ul className="fancy-list">
         {group.map(tag => (
           <li key={tag.fieldValue}>
-            <Link to={`/pensieve/tags/${kebabCase(tag.fieldValue)}/`} className="inline-link">
+            <Link href={`/pensieve/tags/${kebabCase(tag.fieldValue)}/`} className="inline-link">
               {tag.fieldValue} <span className="count">({tag.totalCount})</span>
             </Link>
           </li>
@@ -81,13 +81,7 @@ TagsPage.propTypes = {
 
 export default TagsPage;
 
-export const pageQuery = graphql`
-  query {
-    allMarkdownRemark(limit: 2000, filter: { frontmatter: { draft: { ne: true } } }) {
-      group(field: frontmatter___tags) {
-        fieldValue
-        totalCount
-      }
-    }
-  }
-`;
+export async function getStaticProps() {
+  const { getTagGroups } = require('@lib/content.cjs');
+  return { props: { data: { allMarkdownRemark: { group: await getTagGroups() } } } };
+}
