@@ -108,7 +108,7 @@ const Footer = () => {
         <a href="https://github.com/raytsm/v5" target="_blank" rel="noopener noreferrer">
           <div>Redesigned and Rebuilt by Roshan Thapa</div>
 
-          {githubInfo.stars && githubInfo.forks && (
+          {githubInfo.stars > 0 && githubInfo.forks > 0 && (
             <div className="github-stats">
               <span>
                 <Icon name="Star" />
