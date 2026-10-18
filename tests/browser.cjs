@@ -2,6 +2,7 @@ const { chromium } = require('playwright');
 const base = process.env.TEST_BASE_URL || 'http://localhost:8000';
 const assert = require('assert');
 const { showProjects } = require('../src/config');
+const { outline, fragments } = require('../src/lib/logo.cjs');
 (async () => {
   const browser = await chromium.launch({ channel: 'chrome' });
   try {
@@ -30,6 +31,15 @@ const { showProjects } = require('../src/config');
       await page.waitForSelector('#about', { state: 'attached', timeout: 20000 });
       await page.waitForTimeout(reducedMotion === 'reduce' ? 300 : 3000);
       assert(await page.locator('h1').isVisible(), 'Hero heading missing');
+      const logo = page.getByRole('img', { name: 'Roshan Thapa logo', exact: true });
+      assert(await logo.isVisible(), 'Honeycomb logo missing');
+      assert.strictEqual(await logo.locator('.logo-outline').getAttribute('points'), outline);
+      assert.strictEqual(await logo.locator('.logo-letter').count(), 0);
+      assert.strictEqual(await logo.locator('.honeycomb-fragment').count(), fragments.length);
+      const logoAnimations = await logo.evaluate(
+        svg => svg.getAnimations({ subtree: true }).length,
+      );
+      assert.strictEqual(logoAnimations > 0, reducedMotion === 'no-preference');
       const tabs = page.locator('[role=tab]');
       await tabs.nth(1).click();
       assert.strictEqual(await tabs.nth(1).getAttribute('aria-selected'), 'true');
@@ -74,6 +84,13 @@ const { showProjects } = require('../src/config');
       const resume = await context.request.get(`${base}/resume.pdf`);
       assert(resume.ok());
       assert(resume.headers()['content-type'].includes('pdf'));
+      const favicon = await context.request.get(`${base}/favicon.svg`);
+      assert(favicon.ok());
+      const faviconSvg = await favicon.text();
+      assert(faviconSvg.includes(outline));
+      assert(fragments.every(fragment => faviconSvg.includes(fragment)));
+      const manifest = await context.request.get(`${base}/manifest.webmanifest`);
+      assert.strictEqual((await manifest.json()).name, 'Roshan Thapa');
       await context.close();
       console.log(`Interactions passed: ${reducedMotion}`);
     }

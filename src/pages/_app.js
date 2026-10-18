@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
+import { Analytics } from '@vercel/analytics/next';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import '../styles/images.css';
 
 export default function App({ Component, pageProps }) {
@@ -26,7 +28,13 @@ export default function App({ Component, pageProps }) {
     hash: hash ? `#${hash}` : '',
   };
 
-  return <Component {...pageProps} location={location} />;
+  return (
+    <>
+      <Component {...pageProps} location={location} />
+      <Analytics />
+      <SpeedInsights />
+    </>
+  );
 }
 
 App.propTypes = {

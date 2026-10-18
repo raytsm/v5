@@ -3,6 +3,7 @@ const path = require('path');
 const matter = require('gray-matter');
 const kebabCase = require('lodash/kebabCase');
 const site = require('../src/lib/site');
+const { generateIcons } = require('./generate-icons.cjs');
 
 const root = path.resolve(__dirname, '..');
 const publicDir = path.join(root, 'public');
@@ -16,26 +17,16 @@ for (const [source, destination] of [
   fs.cpSync(path.join(root, source), path.join(publicDir, destination), { recursive: true });
 }
 
-fs.copyFileSync(
-  path.join(root, 'src/images/favicons/favicon.ico'),
-  path.join(publicDir, 'favicon.ico'),
-);
-fs.copyFileSync(
-  path.join(root, 'src/images/favicons/apple-icon-180x180.png'),
-  path.join(publicDir, 'apple-touch-icon.png'),
-);
-fs.copyFileSync(path.join(root, 'src/images/logo.png'), path.join(publicDir, 'icon.png'));
-
 fs.writeFileSync(
   path.join(publicDir, 'manifest.webmanifest'),
   JSON.stringify({
-    name: 'Brittany Chiang',
-    short_name: 'Brittany Chiang',
+    name: site.title,
+    short_name: site.title,
     start_url: '/',
     background_color: '#020c1b',
     theme_color: '#0a192f',
     display: 'minimal-ui',
-    icons: [{ src: '/icon.png', sizes: '512x512', type: 'image/png' }],
+    icons: [{ src: '/icon.png?v=honeycomb', sizes: '512x512', type: 'image/png' }],
   }),
 );
 
@@ -62,4 +53,11 @@ fs.writeFileSync(
   `User-agent: *\nAllow: /\nSitemap: ${site.siteUrl}/sitemap.xml\n`,
 );
 
-console.log('Prepared static files, original fonts, and optimized images.');
+generateIcons(publicDir)
+  .then(() =>
+    console.log('Prepared static files, honeycomb icons, original fonts, and optimized images.'),
+  )
+  .catch(error => {
+    console.error(error);
+    process.exitCode = 1;
+  });

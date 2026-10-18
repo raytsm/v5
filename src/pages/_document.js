@@ -31,8 +31,9 @@ export default class SiteDocument extends Document {
     return (
       <Html lang="en">
         <Head>
-          <link rel="icon" href="/favicon.ico" />
-          <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+          <link rel="icon" href="/favicon.ico?v=honeycomb" sizes="16x16 32x32 48x48" />
+          <link rel="icon" href="/favicon.svg?v=honeycomb" type="image/svg+xml" sizes="any" />
+          <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=honeycomb" />
           <link rel="manifest" href="/manifest.webmanifest" />
           <meta name="theme-color" content="#0a192f" />
         </Head>
