@@ -22,7 +22,7 @@ In this article, how docker, git CI/CD & nginx has been used to deploy an airflo
 
 `mkdir -p ~/airflow` create a root folder for all of you runtime files if it doesn't exist already.
 
-If you have a multiple airflow projects I recommend you to use [Astro CLI](https://www.astronomer.io/docs/cli/v1.44/get-started-cli) to manage you project with is relatively easy if not the easiest. If you choose to use _Astro CLI_ for this project you can skip all the steps below.
+If you have a multiple airflow projects I recommend you to use [Astro CLI](https://www.astronomer.io/docs/cli/v1.44/get-started-cli) to manage you project which is relatively easy if not the easiest. If you choose to use _Astro CLI_ for this project you can skip all the steps below.
 
 If you choose to use the raw method, and still want multiple airflow projects in your machine then there are two important environment variables to consider `AIRFLOW_HOME` & `AIRFLOW__CORE__DAGS_FOLDER`. The latter ones let the airflow know where the actual DAG files are located.
 
@@ -64,7 +64,7 @@ In another terminal, run `airflow dags list` to check that DAG with file name te
 
 There is also the Airflow UI at [http://localhost:8080](http://localhost:8080) where _test_dag_ can be manually triggered.
 
-Next we'll see how to containarize our airlow application using docker.
+Next we'll see how to containarize our airflow application using docker.
 
 ## Containarization of the application
 
