@@ -130,7 +130,7 @@ const About = ({ image }) => {
     'Python',
     'PostgreSQL',
     'Scrapy',
-    'Playright',
+    'Playwright',
     'Apache Airflow',
     'Amazon Web Services',
   ];
