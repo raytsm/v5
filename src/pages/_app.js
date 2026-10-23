@@ -3,9 +3,14 @@ import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
 import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
+import { injectContentsquareScript } from '@contentsquare/tag-sdk';
 import '../styles/images.css';
 
 export default function App({ Component, pageProps }) {
+  useEffect(() => {
+    injectContentsquareScript({ clientId: 'f4648ba4dc88e' });
+  }, []);
+
   useEffect(() => {
     if (!('serviceWorker' in navigator)) return;
     if (process.env.NODE_ENV === 'production') {
