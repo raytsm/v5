@@ -45,3 +45,6 @@ Thumbs.db
 *.swp
 *.swo
 *~
+
+# Contentsquare wizard (generated)
+.cs-wizard/
