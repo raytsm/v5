@@ -18,7 +18,7 @@ Make sure docker is installed in you device, and gui is open if using gui, else 
 Here L is for following through all the redirects until a final destination is reached, f is for failing silently on server errors 4xx and 5xx without downloading the error.html file & O is for downloading the file with same filename.
 
 `mkdir -p ./dags ./logs ./plugins ./config ./include` for all folders required for airflow project.
-Here since the official docker compose doesn't recognise ./include we need to update the docker-compose.yaml file as follows
+Eince the official docker compose doesn't recognise ./include we need to update the docker-compose.yaml file as follows
 find the volumes section in docker-compose.yaml which looks like
 ```
 volumes:
@@ -29,13 +29,13 @@ volumes:
 Add to that
 `- ${AIRFLOW_PROJ_DIR:-}/include:/opt/airflow/include`
 This will make sure your include folder is recognised.
-This also requires `PTYHONPATH: /opt/airflow` with `__init__.py` files in include folder to make sure your python scripts inside the include folder or subfolder can be imported i.e. when python searches directories listed in its module search path, called `sys.path`  this docker env variables with init file helps it.
-This should be in the `environment:` section of docker-compose.yaml file.
+This also requires `PTYHONPATH: /opt/airflow` with `__init__.py` file in include folder to make sure your python scripts inside the include folder or subfolder can be imported i.e. when python searches directories listed in its module search path, called `sys.path`  this docker env variables with init file helps it.
+Those should be in the `environment:` section of docker-compose.yaml file.
 
 Run `docker compose up airflow-init` to initialise airflow environment, including database initialization/migrations and user setup as defined in compose config.
 
-Now `docker compose up -d` with start those airflow services like scheduler, DAG processor, web server/API server, and other configured services.
-At `localhost:8080` airflow will be running use `airflow` for username and `airflow` for password and signing.
+Now `docker compose up -d` will start those airflow services like scheduler, DAG processor, web server/API server, and other configured services.
+At `localhost:8080` airflow will be running. Use `airflow` for both, username and password and sign in.
 
 This conclude the initialisation phase.
 
